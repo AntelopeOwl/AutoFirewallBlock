@@ -35,7 +35,7 @@ echo ##       ##    ##  ##    ##  ##     ## ##    ##
 echo ######## ##     ## ##     ##  #######  ##     ## 
 echo.
 echo.
-echo !!! Directory not found, please make sure this directory exists !!!
+echo !!! Dictionary not found, please make sure the dictionary exists !!!
 pause
 cls
 goto START
