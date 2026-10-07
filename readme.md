@@ -28,7 +28,18 @@ Block a program
 2. Choose [1] "Block a program folder".
 3. Enter (or paste) the main directory of the program, e.g. C:\Program Files\SomeApp
    Paths with spaces and quotes are fine.
-4. Done. Running it again for the same folder replaces the old rules instead of creating duplicates.
+4. AutoFirewallBlock now makes sure the program is completely offline:
+   - If the Windows Firewall is switched off for a network profile, it offers to switch it on
+     (otherwise the rules have no effect there).
+   - Folders with the same name in ProgramData, AppData or Program Files (x86) are listed.
+     They often contain updaters, launchers or helpers - answer "y" to block them too.
+   - Running processes of the program are shown and can be closed, so already open connections end.
+5. Done. Running it again for the same folder replaces the old rules instead of creating duplicates.
+
+
+After a program update
+Updates can add new .exe files. Choose [4] "Re-scan blocked folders" (or run with -Refresh)
+to block them as well.
 
 
 Unblock a program
@@ -36,13 +47,16 @@ Unblock a program
 2. Choose [2] "Unblock a program folder" and pick the folder from the list.
 
 Rules created by older versions of AutoFirewallBlock (named "AFB_exe_..." / "AFB_dll_..." without a group)
-can be removed with menu item [4].
+can be removed with menu item [5].
 
 
 Command line
 
   autofirewallblock.bat -Path "C:\Program Files\SomeApp"      block a folder
+  autofirewallblock.bat -Path "C:\Program Files\SomeApp" -IncludeRelated -StopProcesses
+                                    completely offline: also related folders, close running processes
   autofirewallblock.bat -Path "C:\Program Files\SomeApp" -IncludeDll
+  autofirewallblock.bat -Refresh                               re-scan all blocked folders after updates
   autofirewallblock.bat -Unblock "C:\Program Files\SomeApp"   remove the rules of a folder
   autofirewallblock.bat -List                                  show all blocked folders
 
@@ -51,6 +65,8 @@ Notes
 
 - The Windows Firewall filters network traffic by the process (.exe) that owns the connection.
   Rules for .dll files therefore normally have no effect; they are only created on request (-IncludeDll).
+- A program can still reach the network through other programs it starts (e.g. it opens your web browser,
+  or uses a Windows service). Those are not part of its folder and are not blocked.
 - Drive roots (e.g. C:\) and the Windows folder are refused, so you cannot cut off your whole system by accident.
 - All rules can also be found in wf.msc (Windows key + R, "wf.msc"). They are named "AFB_exe_<folder>_<n> (<file>)"
   and grouped as "AutoFirewallBlock: <folder>", so you can sort or filter by the "Group" column.
