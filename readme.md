@@ -7,28 +7,53 @@
 .AMA.   .AMMA.  `Mbod"YML.  `Mbmo  `Ybmd9'      .JMML.     .JMML..JMML.    `Mbmmd'      W      W     `Moo9^Yo..JMML..JMML.    .JMMmmmd9  .JMML. `Ybmd9'   YMbmd'  .JMML. YA.
                                                                                                                                                                             
                                                                                                                                                                             
-AutoFirewallBlock searches for each .exe and .dll in a main directory and in the subdirectories of a program. 
-The files found are automatically blocked by the firewall, both incoming and outgoing communication.
+AutoFirewallBlock searches for every .exe in the main directory of a program and in all of its subdirectories.
+Each file found is blocked in the Windows Firewall, both incoming and outgoing communication.
+
+
+Requirements
+
+- Windows 8 / Server 2012 or newer (Windows PowerShell 5.1 is included)
+- Administrator rights (the script asks for them automatically)
 
 
 Installation
 
-1. Extract the AutoFirewallBlock.rar to a location of your choice
-   The autofirewallblock.bat, autofirewallblock.ps1 and PS.bat files must not be moved from the AutoFirewallBlock directory. 
-   Otherwise the script cannot start.
+1. Extract AutoFirewallBlock to a location of your choice.
+   autofirewallblock.bat and autofirewallblock.ps1 must stay in the same directory.
 
-Create the firewall rule to block:
-1. Run autofirewallblock.bat as administrator.
-2. Program waiting for input
-3. Insert the main directory of the program to be blocked from the internet
-4. Hit "Enter"
-5. Done
 
-Delete Firewall Rules
-1. Press Windows key + R
-2. Type wf.msc and then Enter.
-3. In the incoming rules and outgoing rules mark the rules and press "del" and confirm with "Yes".
-   All incoming and outgoing rules created by AutoFirewallBlock are named "ABF_dll_ or ABF_exe_" followed by the directory name and a counter
+Block a program
+1. Double-click autofirewallblock.bat and confirm the administrator prompt.
+2. Choose [1] "Block a program folder".
+3. Enter (or paste) the main directory of the program, e.g. C:\Program Files\SomeApp
+   Paths with spaces and quotes are fine.
+4. Done. Running it again for the same folder replaces the old rules instead of creating duplicates.
+
+
+Unblock a program
+1. Start autofirewallblock.bat
+2. Choose [2] "Unblock a program folder" and pick the folder from the list.
+
+Rules created by older versions of AutoFirewallBlock (named "AFB_exe_..." / "AFB_dll_..." without a group)
+can be removed with menu item [4].
+
+
+Command line
+
+  autofirewallblock.bat -Path "C:\Program Files\SomeApp"      block a folder
+  autofirewallblock.bat -Path "C:\Program Files\SomeApp" -IncludeDll
+  autofirewallblock.bat -Unblock "C:\Program Files\SomeApp"   remove the rules of a folder
+  autofirewallblock.bat -List                                  show all blocked folders
+
+
+Notes
+
+- The Windows Firewall filters network traffic by the process (.exe) that owns the connection.
+  Rules for .dll files therefore normally have no effect; they are only created on request (-IncludeDll).
+- Drive roots (e.g. C:\) and the Windows folder are refused, so you cannot cut off your whole system by accident.
+- All rules can also be found in wf.msc (Windows key + R, "wf.msc"). They are named "AFB_exe_<folder>_<n> (<file>)"
+  and grouped as "AutoFirewallBlock: <folder>", so you can sort or filter by the "Group" column.
 
 
 
